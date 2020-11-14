@@ -12,9 +12,13 @@ app = Flask(__name__)
 def show_content(one_title):
     print(one_title)
 
+@app.route("/make/")
+def make_content():
+    print()
+
 @app.route("/")
 def main_html():
-    html_name = './main.html'
+    html_name = './index.html'
     results = datadb.show_page(global_page_num)
 
     to_send = {}
@@ -26,7 +30,7 @@ def main_html():
 
 def init_db():
     global datadb
-    datadb = ssw_db.sw_db('content_table', 'comment_table')
+    datadb = ssw_db.sw_db('content_table', 'comment_table', 'image_table')
     datadb.check_table_exists()
     datadb.make_row_num()
 
