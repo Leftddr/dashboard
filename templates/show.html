@@ -76,6 +76,25 @@
                             </table>
                         </div>
             </section>
+            <section>
+                <form action = "/make_comment" method = "POST">
+                    <div class="row gtr-uniform gtr-50">
+                        <div class="col-3 col-12-xsmall">
+                            <input type = "text" value = "" name = "author" placeholder="author">
+                            <input type = "hidden" value = {{title}} name = "title">
+                        </div>
+                        <div class="col-3 col-12-xsmall">
+                            <input type = "text" value = "" name = "comment" placeholder="comment">
+                        </div>
+                        <div class="col-3 col-12-xsmall">
+                            <input type = "text" value = "" name = "password" placeholder="password">
+                        </div>
+                        <div class="col-3 col-12-xsmall">
+                            <input type = "submit" value = "작성" name = "submit">
+                        </div>
+                    </div>
+                </form>
+            </section>
             <script>
                 function to_page(path, title){
                     var form = $('<form></form>');

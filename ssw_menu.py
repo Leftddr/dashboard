@@ -15,6 +15,8 @@ def show_content(one_title):
     html_name = 'show.html'
 
     contents, comments = datadb.show_content(one_title)
+    if contents == None:
+        return redirect(url_for('main_html'))
     contents = list(contents[0])
     dict_com = {}
 
@@ -45,6 +47,17 @@ def make_content():
         print('DB 저장 완료!!!')
 
         return redirect('/')
+
+@app.route("/make_comment", methods = ['POST'])
+def make_comment():
+    if request.method == 'POST':
+        title = request.form['title']
+        author = request.form['author']
+        password = request.form['password']
+        comment = request.form['comment']
+    
+        datadb.make_comment(author, comment, title, password)
+        return redirect(url_for('show_content', one_title = title))
 
 #글 작성을 위한 라우터
 @app.route("/write")
@@ -82,7 +95,19 @@ def revise():
             return render_template(html_name)
 
         contents = list(contents[0])
-        return render_template(html_name, title = contents[1], author = contents[0], content = contents[1])
+        return render_template(html_name, title = contents[1], author = contents[0], content = contents[2])
+
+@app.route("/revise_content", methods = ['POST'])
+def revise_content():
+    if request.method == 'POST':
+        ori_title = request.form['ori_title']
+        new_title = request.form['new_title']
+        author = request.form['author']
+        content = request.form['content']
+        
+        datadb.update_content(author, content, new_title, ori_title)
+
+        return redirect(url_for('show_content', one_title = new_title))
 
 @app.route("/delete", methods = ['POST'])
 def delete():

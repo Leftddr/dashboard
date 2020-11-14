@@ -62,9 +62,9 @@ class sw_db():
         self.cursor.fetchall()
         print('작성 완료!!!')
 
-    def make_comment(self, author, comment, title):
+    def make_comment(self, author, comment, title, password):
         sql = 'INSERT INTO ' + (self.comment_table)
-        sql += ' VALUES ( "%s", "%s", "%s", "%s", "%s");' % (author, comment, title, str(datetime.today().strftime("%Y%m%d%H%M%S")))
+        sql += ' VALUES ( "%s", "%s", "%s", "%s", "%s");' % (author, comment, title, password, str(datetime.today().strftime("%Y%m%d%H%M%S")))
         self.cursor.execute(sql)
         self.cursor.fetchall()
         print('작성 완료!!!')
@@ -136,9 +136,9 @@ class sw_db():
         self.cursor.fetchall()
         print('삭제 완료!!!')
 
-    def update_content(self, author, content, new_title, origin_title, password):
-        sql = 'UPDATE ' + self.content_table + ' SET author = %s content = %s title = %s, password = %s, date = %s WHERE title = %s' \
-            %(author, content, new_title, password, str(datetime.today().strftime("%Y%m%d%H%M%S")), origin_title)
+    def update_content(self, author, content, new_title, origin_title):
+        sql = 'UPDATE ' + self.content_table + ' SET author = "%s", content = "%s", title = "%s", date = "%s" WHERE title = "%s"' \
+            %(author, content, new_title, str(datetime.today().strftime("%Y%m%d%H%M%S")), origin_title)
 
         self.cursor.execute(sql)
         self.cursor.fetchall()
