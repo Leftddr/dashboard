@@ -241,7 +241,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 										<td>{{author}}</td>
 										{% for item in title %}
 										{% if loop.index == 1 %}
-											<td><a href = "{{ url_for('show_content', one_title = title) }}">{{item}}</a></td>
+											<td><a href = "{{ url_for('show_content', one_title = item) }}">{{item}}</a></td>
 										{% else %}
 											<td>{{item}}</td>
 										{% endif %}
@@ -328,14 +328,14 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 						-->
 					</section>
 					<section>
-						<form action = "#" method = "post">
+						<form action = "/search" method = "post">
 							<div class="row gtr-uniform gtr-50">
 								<div class="col-9 col-6-xsmall">
 									<input type="text" name="title" id="title" value="" placeholder="글 조회" class = "col-11 col-11-xsmall"/>
 								</div>
 								<div class="col-3 col-12-xsmall">
 									<input type="submit" value = "글 조회" class = "button primary">
-									<a href = "{{ url_for('make_content')}}" class = "button primary">글 작성</a>
+									<a href = "{{ url_for('write_content')}}" class = "button primary">글 작성</a>
 								</div>
 						</div>
 						</form>

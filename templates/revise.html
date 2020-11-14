@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시판 작성</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename = 'css/noscript.css') }}" /></noscript>
+</head>
+<body>
+    <section>
+        <h4>게시판 글 작성</h4>
+        <form method="post" action="/make_content" enctype = 'multipart/form-data'>
+            <div class="row gtr-uniform gtr-50">
+                <div class="col-6 col-12-xsmall">
+                    <input type="text" name="title" id="title" value={{title}} />
+                </div>
+                <div class="col-6 col-12-xsmall">
+                    <input type="text" name="author" id="author" value={{author}} />
+                </div>
+                <div class="col-12">
+                    <textarea name="content" id="content" value={{content}} rows="6"></textarea>
+                </div>
+                <div class="col-12">
+                    <ul class="actions">
+                        <li><input type="submit" value="Send Message" class="primary" /></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

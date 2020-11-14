@@ -34,7 +34,7 @@ class sw_db():
 
         if len(res) == 0:
             sql = 'CREATE TABLE ' + (self.comment_table)
-            sql += '(author varchar(20) not null, comment varchar(200) not null, title varchar(20) not null, date DATETIME not null,'
+            sql += '(author varchar(20) not null, comment varchar(200) not null, title varchar(20) not null, pw varchar(20) not null, date DATETIME not null,'
             sql += 'FOREIGN KEY(title) REFERENCES ' + self.content_table + '(title) ON UPDATE CASCADE)'
             self.cursor.execute(sql)
             self.cursor.fetchall()
@@ -54,16 +54,17 @@ class sw_db():
         
         print('table complete!!!!')
     
-    def make_content(self, author, content, title):
+    def make_content(self, author, content, title, password):
         sql = 'INSERT INTO ' + (self.content_table)
-        sql += 'VALUES (' + author + ',' + title + ',' + content + ',' + str(datetime.today().strftime("%Y%m%d%H%M%S")) + ');'
+        sql += ' VALUES ( "%s", "%s", "%s", "%s", "%s");' % (author, title, content, password, str(datetime.today().strftime("%Y%m%d%H%M%S")))
+        print(sql)
         self.cursor.execute(sql)
         self.cursor.fetchall()
         print('작성 완료!!!')
 
     def make_comment(self, author, comment, title):
         sql = 'INSERT INTO ' + (self.comment_table)
-        sql += 'VALUES (' + author + ',' + comment + ',' + title + ',' + str(datetime.today().strftime("%Y%m%d%H%M%S")) + ');'
+        sql += ' VALUES ( "%s", "%s", "%s", "%s", "%s");' % (author, comment, title, str(datetime.today().strftime("%Y%m%d%H%M%S")))
         self.cursor.execute(sql)
         self.cursor.fetchall()
         print('작성 완료!!!')
@@ -107,6 +108,12 @@ class sw_db():
         res2 = self.cursor.fetchall()
 
         return res1, res2
+
+    def only_content(self, title):
+        sql = 'SELECT * FROM ' + self.content_table + " WHERE title = '%s'" % title
+        self.cursor.execute(sql)
+        res1 = self.cursor.fetchall()
+        return res1
     
     def show_image(self, title):
         sql = 'SELECT * FROM ' + self.image_table + " WHERE title = '%s'" % title
@@ -114,3 +121,27 @@ class sw_db():
         res = self.cursor.fetchall()
 
         return res
+    
+    def delete_content(self, title):
+        sql = 'DELETE FROM ' + self.content_table + " WHERE title = '%s'" % title
+        self.cursor.execute(sql)
+        self.cursor.fetchall()
+
+        sql = 'DELETE FROM ' + self.comment_table + " WHERE title = '%s'" % title
+        self.cursor.execute(sql)
+        self.cursor.fetchall()
+
+        sql = 'DELETE FROM ' + self.image_table + " WHERE title = '%s'" % title
+        self.cursor.execute(sql)
+        self.cursor.fetchall()
+        print('삭제 완료!!!')
+
+    def update_content(self, author, content, new_title, origin_title, password):
+        sql = 'UPDATE ' + self.content_table + ' SET author = %s content = %s title = %s, password = %s, date = %s WHERE title = %s' \
+            %(author, content, new_title, password, str(datetime.today().strftime("%Y%m%d%H%M%S")), origin_title)
+
+        self.cursor.execute(sql)
+        self.cursor.fetchall()
+        print('업데이트 완료!!!')
+
+

@@ -4,13 +4,14 @@
     <title>게시판 작성</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename = 'css/noscript.css') }}" /></noscript>
 </head>
 <body>
     <section>
         <h4>게시판 글 작성</h4>
-        <form method="post" action="#">
+        <form method="post" action="/make_content" enctype = 'multipart/form-data'>
             <div class="row gtr-uniform gtr-50">
                 <div class="col-12 col-12-xsmall">
                     <input type="text" name="title" id="title" value="" placeholder="Title" />
@@ -25,16 +26,61 @@
                     <textarea name="content" id="content" placeholder="Enter your message" rows="6"></textarea>
                 </div>
                 <div class="col-12">
-                    <input type = "file" name = "file" placeholder = "image upload" accept = "image/*" multiple>
+                    <input type = "file" name = "file" placeholder = "image_upload" accept = "image/*" multiple>
                 </div>
                 <div class="col-12">
                     <ul class="actions">
                         <li><input type="submit" value="Send Message" class="primary" /></li>
-                        <li><input type="reset" value="Reset" /></li>
                     </ul>
                 </div>
             </div>
         </form>
+
+        <script type = "text/javascript">
+        $(document).ready(function(){
+            $('#title').keydown(function(event){
+                var input_length = $(this).val().length;
+                if(input_length > 19){
+                    alert('제목은 20글자를 넘길 수 없습니다.')
+                    $(this).css('color', 'red');
+                }
+                else{
+                    $(this).css('color', 'black');
+                }
+                
+            })
+            $('#author').keydown(function(event){
+                var input_length = $(this).val().length;
+                if(input_length > 9){
+                    alert('이름은 10글자를 넘길 수 없습니다.')
+                    $(this).css('color', 'red');
+                }
+                else{
+                    $(this).css('color', 'black');
+                }
+            })
+            $('#password').keydown(function(event){
+                var input_length = $(this).val().length;
+                if(input_length > 19){
+                    alert('비밀번호는 20글자를 넘길 수 없습니다.')
+                    $(this).css('color', 'red');
+                }
+                else{
+                    $(this).css('color', 'black');
+                }
+            })
+            $('#content').keydown(function(event){
+                var input_length = $(this).val().length;
+                if(input_length > 99){
+                    alert('내용은 100글자를 넘길 수 없습니다.')
+                    $(this).css('color', 'red');
+                }
+                else{
+                    $(this).css('color', 'black');
+                }
+            })
+        })
+        </script>
     </section>
 </body>
 </html>

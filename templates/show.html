@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시판 작성</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename = 'css/noscript.css') }}" /></noscript>
+</head>
+<body>
+    <section>
+        <h4>게시글</h4>
+            <div class="row gtr-uniform gtr-50">
+                <div class="col-4 col-12-xsmall">
+                    <p>title : {{title}}</p>
+                </div>
+                <div class="col-4 col-12-xsmall">
+                    <p>author : {{author}}</p>
+                </div>
+                <div class="col-4 col-12-xsmall">
+                    <p>date : {{date}}</p>
+                </div>
+                </br><p><strong>content : </strong></p>
+                <div class="col-12" style = "border:1px solid #444443; height:auto; margin:0 auto">
+                    <p>{{content}}</p>
+                    {% for file in files %}
+                        <img src = {{file}}>
+                    {% endfor %}
+                </div>
+            </div>
+            </br>
+            </section>
+            <section>
+                <div id = 'myid' class="row gtr-uniform gtr-50">
+                    <form action = "/revise" method = "POST">
+                        <div class="col-1">
+                            <ul class="actions">
+                                <li><input type = "hidden" name = "title" value = {{title}}></li>
+                                <li><input type="submit" value="수정" class="primary" /></li>
+                            </ul>
+                        </div>
+                    </form>
+                    <form action = "/delete" method = "POST">
+                        <div class="col-1">
+                            <ul class="actions">
+                                <li><input type = "hidden" name = "title" value = {{title}} ></li>
+                                <li><input type="submit" value="삭제" class="primary"/></li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section>
+                <h5>댓글</h5>
+						<div class="table-wrapper">
+							<table>
+								<thead>
+									<tr>
+										<th>author</th>
+										<th>comments</th>
+										<th>date</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for author, comment in comments.items() %}
+									<tr>
+										<td>{{author}}</td>
+										{% for item in comment %}
+											<td>{{item}}</td>
+										{% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+            </section>
+            <script>
+                function to_page(path, title){
+                    var form = $('<form></form>');
+                    form.attr('action', path);
+                    form.attr('method', 'post');
+                    form.appendTo('#myid');
+                    form.submit();
+                }
+            </script>
+</body>
+</html>
