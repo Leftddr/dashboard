@@ -239,8 +239,13 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 									{% for author, title in titles.items() %}
 									<tr>
 										<td>{{author}}</td>
-										<td><a href = "{{ url_for('show_content', one_title = title) }}">{{title}}</a></td>
-										<td>2020-11-07 : 3:0:1</td>
+										{% for item in title %}
+										{% if loop.index == 1 %}
+											<td><a href = "{{ url_for('show_content', one_title = title) }}">{{item}}</a></td>
+										{% else %}
+											<td>{{item}}</td>
+										{% endif %}
+										{% endfor %}
 									</tr>
 									<!--
 									<tr>

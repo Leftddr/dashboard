@@ -24,10 +24,29 @@ def main_html():
     to_send = {}
     for idx, content in enumerate(results):
         content = list(content)
-        to_send[global_content_num + idx] = content[1]
+        send_list = []
+        send_list.append(content[1])
+        send_list.append(content[5])
+        to_send[global_content_num + idx] = send_list
 
     return render_template(html_name, titles = to_send, page_num = global_page_num)
+'''
+def make_date(date):
+    date_str = ''
+    date_str += date[0:3]
+    date_str += '-'
+    date_str += date[4:5]
+    date_str += '-'
+    date_str += date[6:7]
+    date_str += '-'
 
+    date_str += date[8:9]
+    date_str += ':'
+    date_str += date[10:11]
+    date_str += ':'
+    date_str += date[12:13]
+    return date_str
+'''
 def init_db():
     global datadb
     datadb = ssw_db.sw_db('content_table', 'comment_table', 'image_table')
