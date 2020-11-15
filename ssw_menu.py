@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request
+from werkzeug.utils import secure_filename
 import ssw_db
 import os
 
@@ -38,9 +39,9 @@ def make_content():
         author = request.form['author']
         password = request.form['password']
         content = request.form['content']
-        for f in request.files['file']:
-            if os.path.exist('./uploads/' + title) == False:
-                os.makedir('./uploads/' + title)
+        for f in request.files.getlist('file[]'):
+            if os.path.exists('./uploads/' + title) == False:
+                os.makedirs('./uploads/' + title)
             f.save('./uploads/' + title + '/' + secure_filename(f.filename))
             print('파일 저장 완료!!!')
         datadb.make_content(author, content, title, password)
