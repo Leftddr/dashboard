@@ -33,22 +33,18 @@
             </section>
             <section>
                 <div id = 'myid' class="row gtr-uniform gtr-50">
-                    <form action = "/revise" method = "POST">
-                        <div class="col-1">
-                            <ul class="actions">
-                                <li><input type = "hidden" name = "title" value = {{title}}></li>
-                                <li><input type="submit" value="수정" class="primary" /></li>
-                            </ul>
-                        </div>
-                    </form>
-                    <form action = "/delete" method = "POST">
-                        <div class="col-1">
-                            <ul class="actions">
-                                <li><input type = "hidden" name = "title" value = {{title}} ></li>
-                                <li><input type="submit" value="삭제" class="primary"/></li>
-                            </ul>
-                        </div>
-                    </form>
+                    <div class="col-1">
+                        <ul class="actions">
+                            <li><input type = "hidden" id = "title" name = "title" value = {{title}}></li>
+                            <li><input type="submit" id = "revise" value="수정" class="primary" /></li>
+                        </ul>
+                    </div>
+                    <div class="col-1">
+                        <ul class="actions">
+                            <li><input type = "hidden" name = "title" value = {{title}} ></li>
+                            <li><input type="submit" id = "delete" value="삭제" class="primary"/></li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
@@ -75,6 +71,9 @@
                                 </tbody>
                             </table>
                         </div>
+                        {% for image in images %}
+                        <img src = "{{ url_for('static', filename = image )}}">
+                        {% endfor %}
             </section>
             <section>
                 <form action = "/make_comment" method = "POST">
@@ -96,13 +95,51 @@
                 </form>
             </section>
             <script>
-                function to_page(path, title){
-                    var form = $('<form></form>');
-                    form.attr('action', path);
-                    form.attr('method', 'post');
-                    form.appendTo('#myid');
-                    form.submit();
-                }
+                $(document).ready(function(){
+                    $("#delete").click(function(){
+                        var password = prompt("password 입력");
+                        $.ajax({
+                            url:"/check_password",
+                            method:"post",
+                            data:{title : $("#title").val(), password : password},
+                            success : (res) => {
+                                if(res == "1"){
+                                    $.ajax({
+                                        url:"/delete",
+                                        method:"post",
+                                        data:{title : $("#title").val()}
+                                    })
+                                }
+                                else{
+                                    alert("비밀번호가 틀립니다.");
+                                }
+                            },
+                            error : (err) => {alert(err);}
+                        })
+                    })
+
+                    $("#revise").click(function(){
+                        var password = prompt("password 입력");
+                        $.ajax({
+                            url:"/check_password",
+                            method:"post",
+                            data:{title : $("#title").val(), password : password},
+                            success : (res) => {
+                                if(res == "1"){
+                                    $.ajax({
+                                        url:"/revise",
+                                        method:"post",
+                                        data:{title : $("#title").val()}
+                                    })
+                                }
+                                else{
+                                    alert("비밀번호가 틀립니다.");
+                                }
+                            },
+                            error : (err) => {alert(err);}
+                        })
+                    })
+                })
             </script>
 </body>
 </html>

@@ -98,6 +98,26 @@ def search_content():
         to_send[global_content_num] = send_list
         return render_template(html_name, titles = to_send, page_num = global_page_num)
 
+@app.route("/check", methods = ['POST'])
+def check_content():
+    if request.method == 'POST':
+        contents = datadb.only_content(request.form['title'])
+        return str(len(contents))
+
+@app.route("/check_password", methods = ['POST'])
+def check_password():
+    if request.method == 'POST':
+        password = request.form['password']
+        contents = datadb.only_content(request.form['title'])
+        if contents == None:
+            return "<html>Page Not Found</html>"
+        
+        contents = list(contents[0])
+        if str(password) == contents[3]:
+            return "1"
+        else:
+            return "0"
+
 @app.route("/revise", methods = ['POST'])
 def revise():
     html_name = 'revise.html'

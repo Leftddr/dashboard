@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>게시판 작성</title>
+    <title>게시판 수정</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
@@ -10,14 +10,15 @@
 </head>
 <body>
     <section>
-        <h4>게시판 글 작성</h4>
-        <form method="post" action="/make_content" enctype = 'multipart/form-data'>
+        <h4>게시판 글 수정</h4>
+        <form method="post" action="/revise_content" enctype = 'multipart/form-data'>
             <div class="row gtr-uniform gtr-50">
                 <div class="col-6 col-12-xsmall">
-                    <input type="text" name="title" id="title" value={{title}} />
+                    <input type="text" name="new_title" id="new_title" value={{title}} >
+                    <input type="hidden" name="ori_title" id="ori_title" value={{title}} >
                 </div>
                 <div class="col-6 col-12-xsmall">
-                    <input type="text" name="author" id="author" value={{author}} />
+                    <input type="text" name="author" id="author" value={{author}} >
                 </div>
                 <div class="col-12">
                     <textarea name="content" id="content" value={{content}} rows="6">{{content}}</textarea>

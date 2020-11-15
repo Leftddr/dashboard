@@ -15,6 +15,7 @@
             <div class="row gtr-uniform gtr-50">
                 <div class="col-12 col-12-xsmall">
                     <input type="text" name="title" id="title" value="" placeholder="Title" />
+                    <input type="button" id = "check" name = "check" value = "제목 중복 확인">
                 </div>
                 <div class="col-6 col-12-xsmall">
                     <input type="text" name="author" id="author" value="" placeholder="Author" />
@@ -30,7 +31,7 @@
                 </div>
                 <div class="col-12">
                     <ul class="actions">
-                        <li><input type="submit" value="Send Message" class="primary" /></li>
+                        <li><input type="submit" id = "submit" value="Send Message" class="primary" /></li>
                     </ul>
                 </div>
             </div>
@@ -78,6 +79,27 @@
                 else{
                     $(this).css('color', 'black');
                 }
+            })
+            $("#check").click(function(){
+                var check_title = $("#title").val();
+                console.log(check_title);
+                $.ajax(
+                    {
+                        type : "POST",
+                        url : '/check',
+                        data : {title : check_title},
+                        success : (res) => {
+                            if(res >= 1){
+                                alert('제목이 이미 존재합니다.');
+                                $("#title").val("");
+                            }
+                            else{
+                                alert('제목 사용 가능');
+                            }
+                        },
+                        error: (err) => {console.log(err);}
+                    } 
+                )
             })
         })
         </script>
