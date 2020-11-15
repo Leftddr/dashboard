@@ -16,20 +16,30 @@ def show_content(one_title):
     html_name = 'show.html'
 
     contents, comments = datadb.show_content(one_title)
+    db_images = datadb.show_image(one_title)
+    
     if contents == None:
         return redirect(url_for('main_html'))
     contents = list(contents[0])
     dict_com = {}
-
+    images = []
+    
+    for image in db_images:
+        image = list(image)
+        image_str = image[0]
+        images.append(image_str[2:len(image_str)])
+    
     for com in comments:
         com = list(com)
         list_com = []
         list_com.append(com[1])
-        list_com.append(com[3])
+        list_com.append(com[4])
         dict_com[com[0]] = list_com
     
+    print(images)
+    
     return render_template(html_name, title = contents[1], author = contents[0], content = contents[2], date = contents[4],
-        comments = dict_com)
+        comments = dict_com, images = images)
 
 #글을 db에 저장하기 위한 라우터
 @app.route("/make_content", methods = ['POST'])
@@ -39,13 +49,16 @@ def make_content():
         author = request.form['author']
         password = request.form['password']
         content = request.form['content']
+
+        datadb.make_content(author, content, title, password)
+        print('DB 저장 완료!!!')
+
         for f in request.files.getlist('file[]'):
             if os.path.exists('./uploads/' + title) == False:
                 os.makedirs('./uploads/' + title)
             f.save('./uploads/' + title + '/' + secure_filename(f.filename))
+            datadb.make_image('./uploads/' + title + '/' + secure_filename(f.filename), title)
             print('파일 저장 완료!!!')
-        datadb.make_content(author, content, title, password)
-        print('DB 저장 완료!!!')
 
         return redirect('/')
 

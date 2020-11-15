@@ -21,7 +21,7 @@ class sw_db():
 
         if len(res) == 0:
             sql = 'CREATE TABLE '+ (self.content_table)
-            sql += '(author varchar(20) not null, title varchar(20) not null PRIMARY KEY, content varchar(200) not null, pw varchar(20) not null,'
+            sql += '(author varchar(20) not null, title varchar(30) not null PRIMARY KEY, content varchar(200) not null, pw varchar(20) not null,'
             sql += 'date DATETIME not null)'
             print(sql)
             self.cursor.execute(sql)
@@ -34,7 +34,7 @@ class sw_db():
 
         if len(res) == 0:
             sql = 'CREATE TABLE ' + (self.comment_table)
-            sql += '(author varchar(20) not null, comment varchar(200) not null, title varchar(20) not null, pw varchar(20) not null, date DATETIME not null,'
+            sql += '(author varchar(20) not null, comment varchar(200) not null, title varchar(30) not null, pw varchar(20) not null, date DATETIME not null,'
             sql += 'FOREIGN KEY(title) REFERENCES ' + self.content_table + '(title) ON UPDATE CASCADE)'
             self.cursor.execute(sql)
             self.cursor.fetchall()
@@ -46,12 +46,13 @@ class sw_db():
 
         if len(res) == 0:
             sql = 'CREATE TABLE ' + (self.image_table)
-            sql += '(image_path varchar(20) not null, title varchar(20) not null, date DATETIME not null,'
+            sql += '(image_path varchar(100) not null, title varchar(30) not null, date DATETIME not null,'
             sql += 'FOREIGN KEY(title) REFERENCES ' + self.content_table + '(title) ON UPDATE CASCADE)'
             self.cursor.execute(sql)
             self.cursor.fetchall()
             print('image_table 생성 완료')
         
+        self.conn.commit()
         print('table complete!!!!')
     
     def make_content(self, author, content, title, password):
@@ -60,6 +61,7 @@ class sw_db():
         print(sql)
         self.cursor.execute(sql)
         self.cursor.fetchall()
+        self.conn.commit()
         print('작성 완료!!!')
 
     def make_comment(self, author, comment, title, password):
@@ -67,13 +69,15 @@ class sw_db():
         sql += ' VALUES ( "%s", "%s", "%s", "%s", "%s");' % (author, comment, title, password, str(datetime.today().strftime("%Y%m%d%H%M%S")))
         self.cursor.execute(sql)
         self.cursor.fetchall()
+        self.conn.commit()
         print('작성 완료!!!')
     
-    def make_image(self, image_path):
+    def make_image(self, image_path, title):
         sql = 'INSERT INTO ' + (self.image_table)
-        sql += 'VALUES (' + image_path + ',' + str(datetime.today().strftime("%Y%m%d%H%M%S")) + ');'
+        sql += ' VALUES ( "%s", "%s", "%s");' % (image_path, title, str(datetime.today().strftime("%Y%m%d%H%M%S")))
         self.cursor.execute(sql)
         self.cursor.fetchall()
+        self.conn.commit()
         print('image upload 완료!!')
     
     def make_row_num(self):
@@ -87,6 +91,7 @@ class sw_db():
         sql += 'A, (SELECT @rownum:=0) R;'
         self.cursor.execute(sql)
         self.cursor.fetchall()
+        self.conn.commit()
         print('row_num 생성 완료!!!')
     
     def show_page(self, page_num):
@@ -134,7 +139,7 @@ class sw_db():
         sql = 'DELETE FROM ' + self.image_table + " WHERE title = '%s'" % title
         self.cursor.execute(sql)
         self.cursor.fetchall()
-        print('삭제 완료!!!')
+        self.conn.commit()
 
     def update_content(self, author, content, new_title, origin_title):
         sql = 'UPDATE ' + self.content_table + ' SET author = "%s", content = "%s", title = "%s", date = "%s" WHERE title = "%s"' \
@@ -142,6 +147,7 @@ class sw_db():
 
         self.cursor.execute(sql)
         self.cursor.fetchall()
+        self.conn.commit()
         print('업데이트 완료!!!')
 
 
