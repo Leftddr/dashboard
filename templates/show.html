@@ -24,14 +24,16 @@
                 </br><p><strong>content : </strong></p>
                 <div class="col-12" style = "border:1px solid #444443; height:auto; margin:0 auto">
                     <p>{{content}}</p>
-                    {% for file in files %}
-                        <img src = {{file}}>
+                    {% for image in images %}
+                    <img src = "{{ url_for('static', filename = image )}}">
+                    </br>
                     {% endfor %}
                 </div>
             </div>
             </br>
             </section>
             <section>
+            </br>
                 <div id = 'myid' class="row gtr-uniform gtr-50">
                     <div class="col-1">
                         <ul class="actions">
@@ -49,31 +51,38 @@
             </section>
 
             <section>
-                <h5>댓글</h5>
+                <br/>
+                <h5 style = "font-size:30px;"><strong>댓글</strong></h5>
 						<div class="table-wrapper">
 							<table>
 								<thead>
 									<tr>
 										<th>author</th>
 										<th>comments</th>
-										<th>date</th>
+                                        <th>date</th>
+                                        <th>delete</th>
 									</tr>
 								</thead>
 								<tbody>
 									{% for author, comment in comments.items() %}
 									<tr>
+                                        <form action = "/delete_comment" method = "POST">
 										<td>{{author}}</td>
-										{% for item in comment %}
-											<td>{{item}}</td>
-										{% endfor %}
+                                        {% for item in comment %}
+                                        <td><input type = "hidden" name = "comment" value = {{item}}></td>
+                                        <td><input type = "hidden" name = "title" value = {{title}}></td>
+                                        {% if loop.index == 1 %}
+                                        {% endif %}
+										<td>{{item}}</td>
+                                        {% endfor %}
+                                        <td><input type = "text" name = "password" value = "" placeholder="password"></td>
+                                        <td><input type = "submit" id = "comment_delete" value = "삭제"></td>
+                                        </form>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-                        {% for image in images %}
-                        <img src = "{{ url_for('static', filename = image )}}">
-                        {% endfor %}
             </section>
             <section>
                 <form action = "/make_comment" method = "POST">
@@ -107,7 +116,11 @@
                                     $.ajax({
                                         url:"/delete",
                                         method:"post",
-                                        data:{title : $("#title").val()}
+                                        data:{title : $("#title").val()},
+                                        success:(res) => {
+                                            alert('삭제 완료!');
+                                            window.location.href = '/';
+                                        }
                                     })
                                 }
                                 else{
@@ -129,7 +142,10 @@
                                     $.ajax({
                                         url:"/revise",
                                         method:"post",
-                                        data:{title : $("#title").val()}
+                                        data:{title : $("#title").val()},
+                                        success:(res) => {
+                                            document.write(res);
+                                        }
                                     })
                                 }
                                 else{

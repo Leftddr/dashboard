@@ -54,10 +54,10 @@ def make_content():
         print('DB 저장 완료!!!')
 
         for f in request.files.getlist('file[]'):
-            if os.path.exists('./uploads/' + title) == False:
-                os.makedirs('./uploads/' + title)
-            f.save('./uploads/' + title + '/' + secure_filename(f.filename))
-            datadb.make_image('./uploads/' + title + '/' + secure_filename(f.filename), title)
+            if os.path.exists('./static/uploads/' + title) == False:
+                os.makedirs('./static/uploads/' + title)
+            f.save('./static/uploads/' + title + '/' + secure_filename(f.filename))
+            datadb.make_image('uploads/' + title + '/' + secure_filename(f.filename), title)
             print('파일 저장 완료!!!')
 
         return redirect('/')
@@ -117,6 +117,33 @@ def check_password():
             return "1"
         else:
             return "0"
+
+def check_password_comment(title, comment, password):
+    contents = datadb.only_comment(title, comment)
+    if contents == None or len(contents) == 0:
+        return "0"
+    
+    contents = list(contents[0])
+    print(contents)
+    if str(password) == contents[3]:
+        return "1"
+    else:
+        return "0"
+
+@app.route("/delete_comment", methods = ['POST'])
+def delete_comment():
+    if request.method == 'POST':
+        password = request.form['password']
+        title = request.form['title']
+        comment = request.form['comment']
+
+        if check_password_comment(title, comment, password) == "0":
+            return '비밀번호가 다릅니다'
+        
+        print("비밀번호 일치")
+        datadb.delete_comment(comment, title)
+
+        return redirect(url_for('show_content', one_title = title))
 
 @app.route("/revise", methods = ['POST'])
 def revise():

@@ -119,6 +119,12 @@ class sw_db():
         self.cursor.execute(sql)
         res1 = self.cursor.fetchall()
         return res1
+
+    def only_comment(self, title, comment):
+        sql = 'SELECT * FROM ' + self.comment_table + " WHERE title = '%s' AND comment = '%s'" % (title, comment)
+        self.cursor.execute(sql)
+        res = self.cursor.fetchall()
+        return res
     
     def show_image(self, title):
         sql = 'SELECT * FROM ' + self.image_table + " WHERE title = '%s'" % title
@@ -128,10 +134,6 @@ class sw_db():
         return res
     
     def delete_content(self, title):
-        sql = 'DELETE FROM ' + self.content_table + " WHERE title = '%s'" % title
-        self.cursor.execute(sql)
-        self.cursor.fetchall()
-
         sql = 'DELETE FROM ' + self.comment_table + " WHERE title = '%s'" % title
         self.cursor.execute(sql)
         self.cursor.fetchall()
@@ -139,6 +141,11 @@ class sw_db():
         sql = 'DELETE FROM ' + self.image_table + " WHERE title = '%s'" % title
         self.cursor.execute(sql)
         self.cursor.fetchall()
+
+        sql = 'DELETE FROM ' + self.content_table + " WHERE title = '%s'" % title
+        self.cursor.execute(sql)
+        self.cursor.fetchall()
+
         self.conn.commit()
 
     def update_content(self, author, content, new_title, origin_title):
@@ -149,5 +156,13 @@ class sw_db():
         self.cursor.fetchall()
         self.conn.commit()
         print('업데이트 완료!!!')
+    
+    def delete_comment(self, comment, title):
+        new_comment = "삭제된 답글입니다."
+        sql = 'UPDATE ' + self.comment_table + ' SET comment = "%s", date = "%s" WHERE title = "%s" AND comment = "%s"' % (new_comment, str(datetime.today().strftime("%Y%m%d%H%M%S")), title, comment)
+
+        self.cursor.execute(sql)
+        self.conn.commit()
+        print('댓글 삭제 완료')
 
 
