@@ -138,6 +138,11 @@ class sw_db():
         self.cursor.execute(sql)
         self.cursor.fetchall()
 
+        #이미지는 폴더까지 삭제를 해줘야 하기 때문에 경로를 return 한다.
+        sql = 'SELECT * FROM ' + self.image_table + " WHERE title = '%s'" % title
+        self.cursor.execute(sql)
+        retval = self.cursor.fetchall()
+
         sql = 'DELETE FROM ' + self.image_table + " WHERE title = '%s'" % title
         self.cursor.execute(sql)
         self.cursor.fetchall()
@@ -147,6 +152,8 @@ class sw_db():
         self.cursor.fetchall()
 
         self.conn.commit()
+
+        return retval
 
     def update_content(self, author, content, new_title, origin_title):
         sql = 'UPDATE ' + self.content_table + ' SET author = "%s", content = "%s", title = "%s", date = "%s" WHERE title = "%s"' \

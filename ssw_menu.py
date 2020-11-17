@@ -2,11 +2,13 @@ from flask import Flask, render_template, redirect, url_for, request
 from werkzeug.utils import secure_filename
 import ssw_db
 import os
+import shutil
 
 global_menu_num = 0
 global_page_num = 0
 global_content_num = 1
 datadb = None
+image_base_folder = './static/'
 
 app = Flask(__name__)
 
@@ -130,21 +132,6 @@ def check_password_comment(title, comment, password):
     else:
         return "0"
 
-@app.route("/delete_comment", methods = ['POST'])
-def delete_comment():
-    if request.method == 'POST':
-        password = request.form['password']
-        title = request.form['title']
-        comment = request.form['comment']
-
-        if check_password_comment(title, comment, password) == "0":
-            return '비밀번호가 다릅니다'
-        
-        print("비밀번호 일치")
-        datadb.delete_comment(comment, title)
-
-        return redirect(url_for('show_content', one_title = title))
-
 @app.route("/revise", methods = ['POST'])
 def revise():
     html_name = 'revise.html'
@@ -174,9 +161,36 @@ def revise_content():
 def delete():
     if request.method == 'POST':
         title = request.form['title']
-        datadb.delete_content(title)
+        image_paths = datadb.delete_content(title)
+    
+    #이미지가 있는 경로를 만든다.
+    for image_path in image_paths:
+        image_path = list(image_path)
+        list_image_paths = image_path.split('/')
+        path = image_base_folder
+        for list_image_path in list_image_path
+            if '.' in list_image_path:
+                break
+            path += list_image_path + '/'
+
+    print('이미지 폴더 삭제 완료')
     
     return redirect('/')
+
+@app.route("/delete_comment", methods = ['POST'])
+def delete_comment():
+    if request.method == 'POST':
+        password = request.form['password']
+        title = request.form['title']
+        comment = request.form['comment']
+
+        if check_password_comment(title, comment, password) == "0":
+            return '비밀번호가 다릅니다'
+        
+        print("비밀번호 일치")
+        datadb.delete_comment(comment, title)
+
+        return redirect(url_for('show_content', one_title = title))
 
 #가장 처음의 라우터이다.
 @app.route("/")
