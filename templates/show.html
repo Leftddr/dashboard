@@ -69,9 +69,9 @@
                                         <form action = "/delete_comment" method = "POST">
 										<td>{{author}}</td>
                                         {% for item in comment %}
+                                        {% if loop.index == 1 %}
                                         <td><input type = "hidden" name = "comment" value = {{item}}></td>
                                         <td><input type = "hidden" name = "title" value = {{title}}></td>
-                                        {% if loop.index == 1 %}
                                         {% endif %}
 										<td>{{item}}</td>
                                         {% endfor %}

@@ -55,7 +55,10 @@ def make_content():
         datadb.make_content(author, content, title, password)
         print('DB 저장 완료!!!')
 
+        condition_to_exit = "application/octet-stream"
         for f in request.files.getlist('file[]'):
+            if condition_to_exit in str(f):
+                break
             if os.path.exists('./static/uploads/' + title) == False:
                 os.makedirs('./static/uploads/' + title)
             f.save('./static/uploads/' + title + '/' + secure_filename(f.filename))
@@ -166,9 +169,9 @@ def delete():
     #이미지가 있는 경로를 만든다.
     for image_path in image_paths:
         image_path = list(image_path)
-        list_image_paths = image_path.split('/')
+        list_image_paths = image_path[0].split('/')
         path = image_base_folder
-        for list_image_path in list_image_path
+        for list_image_path in list_image_paths:
             if '.' in list_image_path:
                 break
             path += list_image_path + '/'
